@@ -10,7 +10,7 @@ enum movement
     STOPPED
 };
 
-// roda objeto
+// motor objeto
 class HBridge
 {
 public:
@@ -19,12 +19,11 @@ public:
     void applyPWM(int32_t pwm);
     void brake();
 
+private:
     movement mov;
     uint8_t l1;
     uint8_t l2;
     uint8_t channelPWM;
 };
-
-// define a rotação da roda
 
 #endif

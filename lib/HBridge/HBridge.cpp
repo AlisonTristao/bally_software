@@ -45,6 +45,7 @@ void HBridge::applyPWM(int32_t pwm)
 }
 void HBridge::brake()
 {
+    // para o motor
     changeDirection(STOPPED);
     ledcWrite(channelPWM, 4095);
 }
