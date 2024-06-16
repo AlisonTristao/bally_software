@@ -20,38 +20,25 @@ void Control::setVerb(bool verb)
     this->verb = verb;
 }
 
-void Control::printConfig()
+String Control::printConfig()
 {
-    Serial.printf("Constantes: \nkp = %f\nki = %f\nkd = %f\n\n", kp, ki, kd);
+    return "Constantes: \nkp = " + String(kp) + "\nki = " + String(ki) + "\nkd = " + String(kd) + "\n\n";
+    // Serial.printf("Constantes: \nkp = %f\nki = %f\nkd = %f\n\n", kp, ki, kd);
 }
 
 int32_t Control::simplePID(double kp, double ki, double kd, double Erro, int32_t limit)
 {
-    float Ts = 0.01; // tempo de amostragem
+    float Ts = 0.1; // tempo de amostragem
 
+    // anti windup
     aw = (ki - 0.1) * Ts * (limit - pid);
     k1 = (kp + ki * Ts);
     k2 = -kp;
-    // proporcional
-
-    // integral
-    // Ie += (Erro * Ts);
-
-    // derivativa
-    // conferir se não vale mais a pena usar so a saida (y) no D
-
-    // garante que a integral nao sature
-    /* if (Ie >= limit / 2)
-        Ie = limit / 2;
-    else if (Ie <= -limit / 2)
-        Ie = -limit / 2; */
 
     // salva o ultimo erro
-    pid += pid + (k1 * Erro) + (k2 * ErroPassado) + aw + ((Erro - ErroPassado) / Ts) * kd; // com anti-windup
-    // soma tudo
-    // pid = ((kp * Erro) + (Ie * ki) + (Erro - ErroPassado / Ts) * kd);
+    pid += pid + (k1 * Erro) + (k2 * ErroPassado) + aw + ((Erro - ErroPassado) / Ts) * kd; // pid com anti-windup
 
-    // garante que nao sature
+    // garante que o P e o D nao sature
     if (pid >= limit)
         pid = limit;
     else if (pid <= -limit)
@@ -61,7 +48,7 @@ int32_t Control::simplePID(double kp, double ki, double kd, double Erro, int32_t
     {
         // Serial.printf("Tempo: %.2f\t", Ts);
         // Serial.printf("P: %.2f\t I: %.2f\tD: %.2f\t", P, I, D);
-        Serial.printf("PI: %d\t", pid);
+        Serial.printf("PID: %d\t", pid);
         Serial.printf("Erro passado: %.2f,\t Erro: %.2f\n", Erro, Erro);
     }
     ErroPassado = Erro;
@@ -71,23 +58,6 @@ int32_t Control::simplePD(double kp, double kd, double Erro, int32_t limit)
 {
     float Ts = 0.01; // tempo de amostragem
 
-    // proporcional
-
-    // integral
-    // Ie += (Erro * Ts);
-
-    // derivativa
-    // conferir se não vale mais a pena usar so a saida (y) no D
-
-    // garante que a integral nao sature
-    /* if (Ie >= limit / 2)
-        Ie = limit / 2;
-    else if (Ie <= -limit / 2)
-        Ie = -limit / 2; */
-
-    // salva o ultimo erro
-    // pid += pid + ((kp + ki * Ts) * Erro + (-kp) * ErroPassado) + (ki - 0.1) * Ts * (limit - pid) + (Erro - ErroPassado / Ts) * kd; // com anti-windup
-    // soma tudo
     pid = ((kp * Erro) + (Erro - ErroPassado / Ts) * kd);
 
     // garante que nao sature
