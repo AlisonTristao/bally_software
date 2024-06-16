@@ -1,13 +1,14 @@
 #include <Arduino.h>
-#include "HBridge.h"
+#include "pins.h"
 
-void setup()
-{
+void setup() {
+  init_pins();
   Serial.begin(115200);
+
+  tone(BZR, 2000, 1000);
 }
 
-void loop()
-{
-  Serial.println("Funcionando na esp32-S3?....");
+void loop() {
+  Serial.println("Serial monitor is working!");
   delay(1000);
 }
