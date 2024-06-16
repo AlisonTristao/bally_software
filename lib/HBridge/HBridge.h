@@ -14,7 +14,7 @@ enum movement
 class HBridge
 {
 public:
-    HBridge(uint8_t l1, uint8_t l2, uint8_t channelPWM);
+    HBridge(uint8_t l1, uint8_t l2, uint8_t channelPWM, uint8_t pinPWM);
     void changeDirection(movement mov);
     void applyPWM(int32_t pwm);
     void brake();

@@ -1,5 +1,6 @@
 //bibliotecas utilizadas
 #include <Arduino.h>
+<<<<<<< HEAD
 #include <HBridge.h>
 #include <erro_seguidor.h>
 
@@ -22,12 +23,20 @@
 
 //variaveis globais
 short state = state_wait;
+=======
+#include "HBridge.h"
+#include <Control.h>
+String config;
+
+Control control(1, 1, 1);
+>>>>>>> fff16875acb72639024cce956bc3123652a597a8
 void setup()
 {
   Serial.begin(115200);
 }
 void loop()
 {
+<<<<<<< HEAD
   switch (state)
   {
   case state_wait:
@@ -51,4 +60,10 @@ void loop()
     /* code */
     break;
   }
+=======
+  config = control.printConfig();
+  control.setConst(2, 2, 2);
+  Serial.println(config);
+  delay(1000);
+>>>>>>> fff16875acb72639024cce956bc3123652a597a8
 }
