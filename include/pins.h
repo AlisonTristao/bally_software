@@ -1,0 +1,99 @@
+#ifndef PINS_H
+#define PINS_H
+#include <Arduino.h>
+
+// array of leds
+#define LED0    35
+#define LED1    36
+#define LED2    37
+#define LED3    38
+#define LED4    45
+#define LED5    46
+
+// H bridge
+#define AIN1    11
+#define AIN2    10
+#define BIN1    12
+#define BIN2    13
+#define PWM_A   9
+#define PWM_B   14
+
+// Encoders
+#define A_LEFT  47
+#define A_RIGHT 21
+#define B_LEFT  20
+#define B_RIGHT 19
+
+// Buttons
+#define BTN1    1
+#define BTN2    2
+
+// Buzzer
+#define BZR     6
+
+// Multiplex
+#define SIG     18
+#define C0      39
+#define C1      40
+#define C2      41
+#define C3      42
+
+// Side sensors
+#define LEFT    17
+#define RIGHT   8
+
+// i2c devices
+#define SDA     4
+#define SDL     5
+
+// Tensao dividers
+#define BAT     7
+
+void init_pins(){
+    // array of leds
+    pinMode(LED0, OUTPUT); 
+    pinMode(LED1, OUTPUT);
+    pinMode(LED2, OUTPUT);
+    pinMode(LED3, OUTPUT);
+    pinMode(LED4, OUTPUT);
+    pinMode(LED5, OUTPUT);
+
+    // H bridge
+    pinMode(AIN1, OUTPUT);
+    pinMode(AIN2, OUTPUT);
+    pinMode(BIN1, OUTPUT);
+    pinMode(BIN2, OUTPUT);
+    pinMode(PWM_A, OUTPUT);
+    pinMode(PWM_B, OUTPUT);
+
+    // Encoders
+    pinMode(A_LEFT, INPUT);
+    pinMode(A_RIGHT, INPUT);
+    pinMode(B_LEFT, INPUT);
+    pinMode(B_RIGHT, INPUT);
+
+    // Buttons
+    pinMode(BTN1, INPUT);
+    pinMode(BTN2, INPUT);
+
+    // Buzzer
+    pinMode(BZR, OUTPUT);
+    ledcSetup(0, 2000, 8);
+    ledcAttachPin(BZR, 0);
+
+    // Multiplex
+    pinMode(SIG, INPUT);
+    pinMode(C0, OUTPUT);
+    pinMode(C1, OUTPUT);
+    pinMode(C2, OUTPUT);
+    pinMode(C3, OUTPUT);
+
+    // Side sensors
+    pinMode(LEFT, INPUT);
+    pinMode(RIGHT, INPUT);
+
+    // Bat
+    pinMode(BAT, INPUT);
+}
+
+#endif
