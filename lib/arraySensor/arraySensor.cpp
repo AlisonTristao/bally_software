@@ -33,7 +33,7 @@ uint16_t arraySensor::read(uint8_t index){
     digitalWrite(c2, bitRead(index, 2));
     digitalWrite(c3, bitRead(index, 3));
 
-    // read the sensor
+    // if the line is black, invert the value
     if(!lineColor) 
         return 4095 - analogRead(sig);
     return analogRead(sig);

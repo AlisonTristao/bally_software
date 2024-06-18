@@ -6,8 +6,7 @@
 #define BLACK 0
 #define WHITE 1
 
-class arraySensor
-{
+class arraySensor{
 private:
     // mux pins
     uint8_t sig, c0, c1, c2, c3;

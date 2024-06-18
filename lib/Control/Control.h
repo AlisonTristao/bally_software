@@ -1,5 +1,7 @@
-// autor Greg
+#ifndef CONTROL_H
+#define CONTROL_H
 
+// autor Greg
 #include <cstdint>
 #include <Arduino.h>
 
@@ -12,13 +14,6 @@ public:
     // atualiza todas constantes
     void setConst(double kp, double ki, double kd);
     void setVerb(bool verb);
-    /**
-     * escolhemos qual modo do PID usar
-     * @param
-     * Erro calculado com a biblioteca linesensor
-     * @param
-     * mode Rotacional ou Translacional
-     */
     int32_t simplePID(double kp, double ki, double kd, double Erro, int32_t limit);
     int32_t simplePD(double kp, double kd, double Erro, int32_t limit);
     // printa as configurações
@@ -31,3 +26,5 @@ private:
     bool verb = false;
     int32_t pid, aw;
 };
+
+#endif

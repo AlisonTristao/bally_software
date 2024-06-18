@@ -2,6 +2,11 @@
 #define PINS_H
 #include <Arduino.h>
 
+// channels
+#define CH0     0
+#define CH1     1
+#define CH2     2
+
 // array of leds
 #define LED0    35
 #define LED1    36
@@ -78,8 +83,8 @@ void init_pins(){
 
     // Buzzer
     pinMode(BZR, OUTPUT);
-    ledcSetup(0, 2000, 8);
-    ledcAttachPin(BZR, 0);
+    ledcSetup(CH0, 2000, 8);
+    ledcAttachPin(BZR, CH0);
 
     // Multiplex
     pinMode(SIG, INPUT);

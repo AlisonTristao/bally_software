@@ -1,3 +1,6 @@
+#ifndef MAPEAMENTO_PISTA_H
+#define MAPEAMENTO_PISTA_H
+
 #include <Arduino.h>
 #define sensor_fim_de_pista 17 //17 ou 8, tem que conferir
 
@@ -40,3 +43,5 @@ void mapeamento()
         //incluir codigo para enviar os valores***********************************************************************************************************************
     }
 }
+
+#endif
