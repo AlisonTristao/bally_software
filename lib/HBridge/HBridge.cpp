@@ -10,6 +10,9 @@ HBridge::HBridge(uint8_t l1, uint8_t l2, uint8_t channelPWM, uint8_t pinPWM)
     // configura o pwm
     ledcSetup(channelPWM, 5000, 12);
     ledcAttachPin(pinPWM, channelPWM);
+
+    // define a direcao
+    mov = STOPPED;
 }
 void HBridge::changeDirection(movement move)
 {
@@ -52,6 +55,7 @@ void HBridge::applyPWM(int32_t pwm)
         changeDirection(move);
 
     // aplica o pwm
+    Serial.println(pwm);
     ledcWrite(channelPWM, abs(pwm));
 }
 void HBridge::brake()

@@ -1,17 +1,19 @@
 #include <Arduino.h>
 #include "pins.h"
-#include "leds.h"
-#include "error.h"
 #include "HBridge.h"
-#include "Control.h"
-#include "arraySensor.h"
-#include "mapeamento_pista.h"
 
-void setup(){
-    Serial.begin(115200);
+void setup()
+{
+  Serial.begin(115200);
+  init_pins();
+
+  HBridge leftMotor(AIN1, AIN2, CH1, PWM_A);
+  HBridge rightMotor(BIN1, BIN2, CH2, PWM_B);
+
+  leftMotor.applyPWM(1500);
+  rightMotor.applyPWM(1500);
 }
 
-void loop(){
-    Serial.println("Hello World");
-    delay(1000);
+void loop()
+{
 }
