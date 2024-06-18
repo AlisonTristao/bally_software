@@ -54,6 +54,12 @@
 // Tensao dividers
 #define BAT     7
 
+//state machine
+#define state_wait 1
+#define state_calibrating 2
+#define state_run 3
+#define state_finish 4
+
 void init_pins(){
     // array of leds
     pinMode(LED0, OUTPUT); 
