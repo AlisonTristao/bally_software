@@ -2,13 +2,18 @@
 #define PINS_H
 #include <Arduino.h>
 
+// channels
+#define CH0     0
+#define CH1     1
+#define CH2     2
+
 // array of leds
 #define LED0    35
 #define LED1    36
 #define LED2    37
 #define LED3    38
-#define LED4    45
-#define LED5    46
+#define LED4    46
+#define LED5    45
 
 // H bridge
 #define AIN1    11
@@ -49,6 +54,12 @@
 // Tensao dividers
 #define BAT     7
 
+//state machine
+#define state_wait 1
+#define state_calibrating 2
+#define state_run 3
+#define state_finish 4
+
 void init_pins(){
     // array of leds
     pinMode(LED0, OUTPUT); 
@@ -78,8 +89,8 @@ void init_pins(){
 
     // Buzzer
     pinMode(BZR, OUTPUT);
-    ledcSetup(0, 2000, 8);
-    ledcAttachPin(BZR, 0);
+    ledcSetup(CH0, 2000, 8);
+    ledcAttachPin(BZR, CH0);
 
     // Multiplex
     pinMode(SIG, INPUT);

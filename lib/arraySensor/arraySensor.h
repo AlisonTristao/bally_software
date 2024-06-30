@@ -3,15 +3,14 @@
 #include <Arduino.h>
 
 // line colors
-#define BLACK 0
-#define WHITE 1
+#define BLACK 1
+#define WHITE 0
 
-class arraySensor
-{
+class arraySensor{
 private:
     // mux pins
     uint8_t sig, c0, c1, c2, c3;
-    uint8_t len;
+    uint8_t len, init_arr;
     bool lineColor;
     double lastPosition;
 
@@ -30,8 +29,20 @@ public:
 
     // init variables
     void init();
+
+    // set the initial array of the mux
+    void set_init_arr(uint8_t init_arr);
+
+    // set the initial array
     bool calibrate(uint8_t n_samples, uint8_t delay_ms, uint8_t led);
+    
+    // get the line position
     String calibrate_status();
+
+    // calculate the line position
     double read_line();
+
+    // debug
+    String debub_fast();
 };
 #endif

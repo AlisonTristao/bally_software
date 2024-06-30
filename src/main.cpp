@@ -1,14 +1,16 @@
 #include <Arduino.h>
-#include "pins.h"
 
 void setup() {
-  init_pins();
-  Serial.begin(115200);
+    Serial.begin(921600);
 
-  tone(BZR, 2000, 1000);
+    // random seed
+    randomSeed(analogRead(0));
 }
 
 void loop() {
-  Serial.println("Serial monitor is working!");
-  delay(1000);
+    // print a random number
+    uint32_t now = micros();
+    Serial.print("tempo: ");
+    Serial.println(micros() - now);
+    delay(500);
 }

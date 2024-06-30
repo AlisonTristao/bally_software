@@ -16,6 +16,10 @@ arraySensor::~arraySensor(){
     delete[] max;
 }
 
+void arraySensor::set_init_arr(uint8_t init_arr){
+    this->init_arr = init_arr;
+}
+
 void arraySensor::init(){
     // init arrays
     min = new uint16_t[len];
@@ -27,13 +31,16 @@ void arraySensor::init(){
 }
 
 uint16_t arraySensor::read(uint8_t index){
+    // set the index of the sensor
+    index = index + init_arr;
+
     // set the mux to read the sensor
     digitalWrite(c0, bitRead(index, 0));
     digitalWrite(c1, bitRead(index, 1));
     digitalWrite(c2, bitRead(index, 2));
     digitalWrite(c3, bitRead(index, 3));
 
-    // read the sensor
+    // if the line is black, invert the value
     if(!lineColor) 
         return 4095 - analogRead(sig);
     return analogRead(sig);
@@ -47,8 +54,8 @@ uint16_t arraySensor::normalize(uint16_t value, uint8_t index){
 bool arraySensor::calibration_ok(){
     // check if the calibration is ok
     for(uint8_t i = 0; i < len; i++)
-        if(max[i] <= min[i]) return false;
-    return true;
+        if(max[i] <= min[i]) return true;
+    return false;
 }
 
 bool arraySensor::calibrate(uint8_t n_samples, uint8_t delay_ms, uint8_t led){
@@ -116,6 +123,16 @@ String arraySensor::debub(){
                     ": "            + 
                     String(read(i)) + 
                     "\n";
+    }
+
+    return status;
+}
+
+String arraySensor::debub_fast(){
+    // return the calibration status
+    String status;
+    for(uint8_t i = 0; i < len; i++){
+        status +=   String(normalize(read(i), i)) + "\t";
     }
 
     return status;
