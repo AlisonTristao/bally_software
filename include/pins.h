@@ -24,10 +24,10 @@
 #define PWM_B   14
 
 // Encoders
-#define A_LEFT  47
-#define A_RIGHT 21
-#define B_LEFT  20
-#define B_RIGHT 19
+#define A0      47
+#define A1      21
+#define B0      19
+#define B1      20
 
 // Buttons
 #define BTN1    1
@@ -78,10 +78,10 @@ void init_pins(){
     pinMode(PWM_B, OUTPUT);
 
     // Encoders
-    pinMode(A_LEFT, INPUT);
-    pinMode(A_RIGHT, INPUT);
-    pinMode(B_LEFT, INPUT);
-    pinMode(B_RIGHT, INPUT);
+    pinMode(A0, INPUT);
+    pinMode(A1, INPUT);
+    pinMode(B0, INPUT);
+    pinMode(B1, INPUT);
 
     // Buttons
     pinMode(BTN1, INPUT);
