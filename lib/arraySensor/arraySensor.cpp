@@ -115,25 +115,8 @@ double arraySensor::read_line(){
 }
 
 String arraySensor::debub(){
-    // return the calibration status
     String status;
-    for(uint8_t i = 0; i < len; i++){
-        status +=   "Sensor "       + 
-                    String(i)       + 
-                    ": "            + 
-                    String(read(i)) + 
-                    "\n";
-    }
-
-    return status;
-}
-
-String arraySensor::debub_fast(){
-    // return the calibration status
-    String status;
-    for(uint8_t i = 0; i < len; i++){
-        status +=   String(normalize(read(i), i)) + "\t";
-    }
-
+    for(uint8_t i = 0; i < len; i++)
+        status += String(normalize(read(i), i)) + "\t";
     return status;
 }

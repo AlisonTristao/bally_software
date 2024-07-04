@@ -21,7 +21,6 @@ private:
     uint16_t read(uint8_t index);
     uint16_t normalize(uint16_t value, uint8_t index);
     bool calibration_ok();
-    String debub();
 
 public:
     arraySensor(uint8_t len, uint8_t sig, uint8_t c0, uint8_t c1, uint8_t c2, uint8_t c3, bool lineColor);
@@ -43,6 +42,6 @@ public:
     double read_line();
 
     // debug
-    String debub_fast();
+    String debub();
 };
 #endif
