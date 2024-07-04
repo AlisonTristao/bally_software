@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include <pins.h>
 #include <HBridge.h>
-#include <ESP32Encoder.h>
+#include <Encoder.h>
 
 // encoders
-ESP32Encoder encoderA;
-ESP32Encoder encoderB;
+Encoder encoderA;
+Encoder encoderB;
 
 // motors
 HBridge motorA(AIN1, AIN2, CH1, PWM_A);
@@ -23,7 +23,7 @@ void setup(){
 	motorB.init();
 	
 	// alocates interrupt on second core
-	ESP32Encoder::isrServiceCpuCore = 0;
+	Encoder::isrServiceCpuCore = 0;
 
 	// define encoders configuration
 	encoderA.attachHalfQuad(A1, A0);
