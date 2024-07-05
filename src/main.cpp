@@ -1,15 +1,9 @@
 #include <Arduino.h>
+#include "arraySensor.h"
 #include <pins.h>
-#include <HBridge.h>
-#include <Encoder.h>
 
-// encoders
-Encoder encoderA;
-Encoder encoderB;
-
-// motors
-HBridge motorA(AIN1, AIN2, CH1, PWM_A);
-HBridge motorB(BIN1, BIN2, CH2, PWM_B);
+// obj sensor
+arraySensor sensor(8, SIG, C0, C1, C2, C3, WHITE);
 
 void setup(){
 	// init serial
@@ -18,29 +12,25 @@ void setup(){
 	// init pins
 	init_pins();
 
-	// init motors
-	motorA.init();
-	motorB.init();
-	
-	// alocates interrupt on second core
-	Encoder::isrServiceCpuCore = 0;
+	// set init array senso0r
+	sensor.set_init_arr(4);
 
-	// define encoders configuration
-	encoderA.attachHalfQuad(A1, A0);
-	encoderB.attachHalfQuad(B1, B0);
+	// init sensor
+	sensor.init();
 
-	// clear the encoder's raw count and set the tracked count to zero
-	encoderA.clearCount();
-	encoderB.clearCount();
+	// calibrate sensor
+	sensor.calibrate(30, 100, LED0);
+
+	// wait 3 seconds
+	Serial.println(sensor.calibrate_status());
+
+	delay(3000);
 }
 
 void loop(){
-	// set the pwm
-	motorA.applyPWM(1000);
-	motorB.applyPWM(1000);
-
-	// Loop and read the count
-	Serial.println("Encoder speed = " + String((double)encoderA.getSpeed()) + " " + String((double)encoderB.getSpeed()));
-	delay(100);
+	// debug
+	Serial.print(sensor.debub());
+	Serial.print(" ");
+	Serial.println(sensor.read_line());
 }
 

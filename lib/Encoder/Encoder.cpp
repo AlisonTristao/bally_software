@@ -12,7 +12,6 @@
 #if SOC_PCNT_SUPPORTED
 // Not all esp32 chips support the pcnt (notably the esp32c3 does not)
 #include <soc/pcnt_struct.h>
-#include "esp_log.h"
 #include "esp_ipc.h"
 
 static const char* TAG_ENCODER = "Encoder";
@@ -25,30 +24,20 @@ static portMUX_TYPE spinlock = portMUX_INITIALIZER_UNLOCKED;
 //static Encoder *gpio2enc[48];
 //
 //
-puType Encoder::useInternalWeakPullResistors = puType::down;
 uint32_t Encoder::isrServiceCpuCore = ISR_CORE_USE_DEFAULT;
 Encoder *Encoder::encoders[MAX_ESP32_ENCODERS] = { NULL, };
 
-bool Encoder::attachedInterrupt=false;
+bool Encoder::attachedInterrupt = false;
 
-Encoder::Encoder(bool always_interrupt_, enc_isr_cb_t enc_isr_cb, void* enc_isr_cb_data):
-	always_interrupt{always_interrupt_},
-	aPinNumber{(gpio_num_t) 0},
-	bPinNumber{(gpio_num_t) 0},
+Encoder::Encoder(int aPintNumber, int bPinNumber):
+	aPinNumber{(gpio_num_t) aPinNumber},
+	bPinNumber{(gpio_num_t) bPinNumber},
 	unit{(pcnt_unit_t) -1},
-	countsMode{2},
-	count{0},
 	r_enc_config{},
-	_enc_isr_cb(enc_isr_cb),
-	_enc_isr_cb_data(enc_isr_cb_data),
 	attached{false},
 	direction{false},
 	working{false}
 {
-	if (enc_isr_cb_data == nullptr)
-	{
-		_enc_isr_cb_data = this;
-	}
 }
 
 Encoder::~Encoder() {}
@@ -105,7 +94,7 @@ static IRAM_ATTR void ipc_install_isr_on_core(void *arg) {
     *result = pcnt_isr_service_install(0);
 }
 
-void Encoder::attach(int a, int b, encType et) {
+void Encoder::attach(int a, int b) {
 	if (attached) return;
 	
 	int index = 0;
@@ -126,15 +115,6 @@ void Encoder::attach(int a, int b, encType et) {
 	gpio_pad_select_gpio(bPinNumber);
 	gpio_set_direction(aPinNumber, GPIO_MODE_INPUT);
 	gpio_set_direction(bPinNumber, GPIO_MODE_INPUT);
-
-	if(useInternalWeakPullResistors == puType::down){
-		gpio_pulldown_en(aPinNumber);
-		gpio_pulldown_en(bPinNumber);
-	}
-	if(useInternalWeakPullResistors == puType::up){
-		gpio_pullup_en(aPinNumber);
-		gpio_pullup_en(bPinNumber);
-	}
 	
 	// Set up encoder PCNT configuration
 	// Configure channel 0
@@ -142,7 +122,7 @@ void Encoder::attach(int a, int b, encType et) {
 	r_enc_config.ctrl_gpio_num = bPinNumber;    	// Rotary Encoder Chan B
 	r_enc_config.unit = unit;
 	r_enc_config.channel = PCNT_CHANNEL_0;			// channel 0
-	r_enc_config.pos_mode = et != encType::single ? PCNT_COUNT_DEC : PCNT_COUNT_DIS; //Count Only On Rising-Edges
+	r_enc_config.pos_mode = PCNT_COUNT_DIS; 		//Count Only On Rising-Edges
 	r_enc_config.neg_mode = PCNT_COUNT_INC;   		// Discard Falling-Edge
 	r_enc_config.lctrl_mode = PCNT_MODE_KEEP;    	// Rising A on HIGH B = CW Step
 	r_enc_config.hctrl_mode = PCNT_MODE_REVERSE; 	// Rising A on LOW B = CCW Step
@@ -160,13 +140,6 @@ void Encoder::attach(int a, int b, encType et) {
 	r_enc_config.lctrl_mode = PCNT_MODE_DISABLE;    // disabling channel 1
 	r_enc_config.hctrl_mode = PCNT_MODE_DISABLE; 	// disabling channel 1
 
-	if (et == encType::full) {
-		// set up second channel for full quad
-		r_enc_config.pos_mode = PCNT_COUNT_DEC; 	// Count Only On Rising-Edges
-		r_enc_config.neg_mode = PCNT_COUNT_INC;   	// Discard Falling-Edge
-		r_enc_config.lctrl_mode = PCNT_MODE_REVERSE;// prior high mode is now low
-		r_enc_config.hctrl_mode = PCNT_MODE_KEEP; 	// prior low mode is now high
-	}
 	pcnt_unit_config(&r_enc_config);
 
 	// Filter out bounces and noise
@@ -199,15 +172,8 @@ void Encoder::attach(int a, int b, encType et) {
 	attached = true;
 }
 
-void Encoder::attachHalfQuad(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, encType::half);
-
-}
-void Encoder::attachSingleEdge(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, encType::single);
-}
-void Encoder::attachFullQuad(int aPintNumber, int bPinNumber) {
-	attach(aPintNumber, bPinNumber, encType::full);
+void Encoder::init() {
+	attach((int) aPinNumber, (int) bPinNumber);
 }
 
 void Encoder::setCount(int64_t value) {

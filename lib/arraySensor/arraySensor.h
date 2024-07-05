@@ -14,17 +14,17 @@ private:
     bool lineColor;
     double lastPosition;
 
-    // normalize array
-    uint16_t *min, *max;
-
     // functions
     uint16_t read(uint8_t index);
-    uint16_t normalize(uint16_t value, uint8_t index);
+    int16_t normalize(uint16_t value, uint8_t index);
     bool calibration_ok();
 
 public:
     arraySensor(uint8_t len, uint8_t sig, uint8_t c0, uint8_t c1, uint8_t c2, uint8_t c3, bool lineColor);
     virtual ~arraySensor();
+    
+    // normalize array
+    uint16_t *min, *max;
 
     // init variables
     void init();
@@ -32,7 +32,7 @@ public:
     // set the initial array of the mux
     void set_init_arr(uint8_t init_arr);
 
-    // set the initial array
+    // calibrate the sensor
     bool calibrate(uint8_t n_samples, uint8_t delay_ms, uint8_t led);
     
     // get the line position

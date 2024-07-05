@@ -40,15 +40,21 @@ uint16_t arraySensor::read(uint8_t index){
     digitalWrite(c2, bitRead(index, 2));
     digitalWrite(c3, bitRead(index, 3));
 
+    // wait for the signal to stabilize
+    delay(1);
+
     // if the line is black, invert the value
     if(!lineColor) 
         return 4095 - analogRead(sig);
     return analogRead(sig);
 }
 
-uint16_t arraySensor::normalize(uint16_t value, uint8_t index){
+int16_t arraySensor::normalize(uint16_t value, uint8_t index){
     // normalize the value
-    return map(value, min[index], max[index], 0, 1000);
+    int16_t norm = map(value, min[index], max[index], 0, 1000);
+    if(norm < 0)        return 0;
+    if(norm > 1000)     return 1000;
+    return norm;
 }
 
 bool arraySensor::calibration_ok(){
@@ -102,13 +108,13 @@ double arraySensor::read_line(){
         value += val * (i+1) * 1000;
         measure += val;
         // check if the line is detected
-        if(val > 150) line = true;
+        if(val > (len*100)) line = true;
     }
 
     // atualize last position
     if(line)    lastPosition = value/measure;
     // saturate last position
-    else        lastPosition = lastPosition < (len*1000)/2 ? 0 : len*1000;
+    else        lastPosition = lastPosition < (len*1000)/2 ? 1000 : len*1000;
     
     // return the last position
     return lastPosition;
